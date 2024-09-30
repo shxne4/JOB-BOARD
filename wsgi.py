@@ -3,9 +3,9 @@ from flask import Flask
 from flask.cli import with_appcontext, AppGroup
 
 from App.database import db, get_migrate
-from App.models import User
+from App.models import User, Employer, Job, JobSeeker, JobApplication
 from App.main import create_app
-from App.controllers import ( create_user, get_all_users_json, get_all_users, initialize )
+from App.controllers import ( create_user, get_all_users, create_job, view_jobs, apply_job, view_applicants, initialize )
 
 
 # This commands file allow you to create convenient CLI commands for testing controllers
@@ -29,23 +29,54 @@ User Commands
 # eg : flask user <command>
 user_cli = AppGroup('user', help='User object commands') 
 
-# Then define the command and any parameters and annotate it with the group (@)
-@user_cli.command("create", help="Creates a user")
-@click.argument("username", default="rob")
-@click.argument("password", default="robpass")
-def create_user_command(username, password):
-    create_user(username, password)
-    print(f'{username} created!')
 
-# this command will be : flask user create bob bobpass
+# Command to create a new user (Employer or JobSeeker)
+@user_cli.command("create")
+@click.argument("id")
+@click.argument("username", default="guest")
+@click.argument("email", default="guest@mail.com")
+@click.argument("phone", default="1234567")
+@click.argument("person", default="jobseeker")  # Should be 'Employer' or 'JobSeeker'
+def create_user_command(id, username, email, phone, person):
+    create_user(id, username, email, phone, person)
+    print(f'{username} created!')
 
 @user_cli.command("list", help="Lists users in the database")
 @click.argument("format", default="string")
 def list_user_command(format):
     if format == 'string':
-        print(get_all_users())
-    else:
-        print(get_all_users_json())
+        get_all_users()
+
+# Command to create a job (for employers)
+@user_cli.command("create-job")
+@click.argument("id")
+@click.argument("title")
+@click.argument("description")
+@click.argument("salary", type=float)
+@click.argument("employerid")
+def create_job_command(id, title, description, salary, employerid):
+    create_job(id, title, description, salary, employerid)
+    print(f'{title} created!')
+
+# Command to view all jobs
+@user_cli.command("view-jobs")
+def view_jobs_command():
+    view_jobs()
+
+# # Command for JobSeeker to apply to a job
+@user_cli.command("apply-job")
+@click.argument("id")
+@click.argument("jobid")
+@click.argument("jobseekerid")
+def apply_job_command(id, jobid, jobseekerid):
+    apply_job(id, jobid, jobseekerid)
+        # , Status: {application.status}")
+
+# Command for Employer to view job applicants for a specific job
+@user_cli.command("view-applicants")
+@click.argument("jobid")
+def view_applicants_command(jobid):
+    view_applicants(jobid)
 
 app.cli.add_command(user_cli) # add the group to the cli
 
