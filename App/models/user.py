@@ -53,7 +53,6 @@ class Job(db.Model):
 
 class JobApplication(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    # status =  db.Column(db.String, nullable=False, default='Pending')
     jobid = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
     jobseekerid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
