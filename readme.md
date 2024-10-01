@@ -1,7 +1,7 @@
 #CLI COMMANDS
 ```
 CREATE USER
-flask user create <id> <'username'> <'email'> <'phone'> <'employer'/'jobseeker'>
+flask user create <id> <'username'> <'email'> <'phone'> <'employer'/'jobseeker'> #enter either 'jobseeker' or 'employer' as the last parameter
 
 VIEW ALL USERS
 flask user list
