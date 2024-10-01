@@ -29,7 +29,8 @@ def create_job(id, title, description, salary, employerid):
     job = Job(id=id, title=title, description=description, salary=salary, employerid=employerid)
     db.session.add(job)
     db.session.commit()
-    return job, "Job added successfully"
+    print ("Job added successfully")
+    return job
 
 def view_jobs():
     jobs = Job.query.all()
@@ -37,7 +38,8 @@ def view_jobs():
         for job in jobs:
             print('Job ID: ', job.id, ' Title: ', job.title, ' Description: ', job.description, ' Salary: ', job.salary, ' Employer ID: ', job.employerid )
     else:
-        return "No jobs listed"
+        print ("No jobs listed")
+        return None
 
 def apply_job(id, jobid, jobseekerid):
     jobs = Job.query.all()
@@ -51,14 +53,16 @@ def apply_job(id, jobid, jobseekerid):
     application = JobApplication(id=id, jobid=jobid, jobseekerid=jobseekerid)
     db.session.add(application)
     db.session.commit()
-    return application, f"Jobseeker {jobseekerid} applied to Job {jobid} successfully"
+    print (f"Jobseeker {jobseekerid} applied to Job {jobid} successfully")
+    return application, 
 
 def view_applicants(jobid):
 
     applicants = JobApplication.query.filter_by(jobid=jobid).all()
     if applicants:
         for applicant in applicants:
-            print (applicant.jobseekerid )
+            print (f'Jobseeker ID: {applicant.jobseekerid}')
     else:
-        return "No applicants available"
+        print ("No applicants available")
+        return None
     
